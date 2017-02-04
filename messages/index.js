@@ -35,7 +35,10 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 .matches('None', (session, args) => {
     session.send('Hi! This is the None intent handler. You said: \'%s\'.', session.message.text);
     session.send(Object.keys(session.message).join(','));
-    session.send(session.message.entities);
+})
+.matches('ActorForRole', (session, args) => {
+    session.send('Its Michael J Fox', session.message.text);
+    session.send(session.message);
 })
 .onDefault((session) => {
     session.send('Sorry, I did not understand \'%s\'.', session.message.text);
