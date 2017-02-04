@@ -31,15 +31,16 @@ var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 /*
 .matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
-*/
+
 .matches('None', (session, args) => {
     session.send('Hi! This is the None intent handler. You said: \'%s\'.', session.message.text);
 })
+*/
 .matches('greeting', (session, args) => {
     session.send('hello i am clappy', session.message.text);
     session.send(session.message);
 })
-.matches(/^actorForRole/i, (session, args) => {
+.matches('actorForRole', (session, args) => {
     session.send('Its Michael J Fox', session.message.text);
     session.send(session.message);
 })
