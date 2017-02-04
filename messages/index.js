@@ -34,7 +34,6 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 */
 .matches('None', (session, args) => {
     session.send('Hi! This is the None intent handler. You said: \'%s\'.', session.message.text);
-    session.send(Object.keys(session.message).join(','));
 })
 .matches('greeting', (session, args) => {
     session.send('hello i am clappy', session.message.text);
