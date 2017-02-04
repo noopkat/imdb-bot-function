@@ -45,7 +45,7 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send(session.message);
 })
 .onDefault((session) => {
-    session.send('what the hell' + session.message);
+    session.send('what the hell' + session.message.entities);
     session.send('Sorry, I did not understand \'%s\'.', session.message.text);
 });
 
