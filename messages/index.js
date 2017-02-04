@@ -38,14 +38,13 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 */
 .matches('greeting', (session, args) => {
     session.send('hello i am clappy', session.message.text);
-    session.send(session.message);
 })
 .matches('actorForRole', (session, args) => {
     session.send('Its Michael J Fox', session.message.text);
-    session.send(session.message);
+    session.send(JSON.stringify(args));
 })
 .onDefault((session) => {
-    session.send('what the hell' + session.message.entities);
+    session.send('what the hell' + session.message);
     session.send('Sorry, I did not understand \'%s\'.', session.message.text);
 });
 
