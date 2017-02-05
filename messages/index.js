@@ -58,7 +58,18 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         request(movieSearchUrl, (error, response, body) => {
             if (!error && response.statusCode == 200) {
 
-                const movieId = JSON.parse(body).results[0].id;
+                const results = JSON.parse(body).results;
+
+                if (!results.length) {
+                    return session.send("I couldn't find the right movie you're asking about.");
+                }
+
+                // this is a basic placeholder, we should return a set of movies to choose from as chat buttons
+                // if (results.length > 1) {
+                //     return session.send("I got multiple results, I'm not sure which one to choose.");
+                // }
+
+                const movieId = results[0].id;
                 const movieCreditsUrl = movieUrl+'movie/' + movieId + '/credits?api_key='+ movieKey;
 
                 request(movieCreditsUrl, (error, response, body) => {
