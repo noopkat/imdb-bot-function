@@ -51,9 +51,9 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
         }
 
         const teststring = 'intent: actorForRole, movie title: ' + movieTitle + ', character name: ' + characterName;
-        const movieSearchUrl = movieUrl+'search/movie/?query=' + movieTitle + '&api_key='+ movieKey;
-
         session.send(teststring);
+
+        const movieSearchUrl = movieUrl+'search/movie/?query=' + movieTitle + '&api_key='+ movieKey;
 
         request(movieSearchUrl, (error, response, body) => {
             if (!error && response.statusCode == 200) {
@@ -65,9 +65,16 @@ const intents = new builder.IntentDialog({ recognizers: [recognizer] })
                     if (!error && response.statusCode == 200) {
                         const findCharacter = JSON.parse(body).cast.filter((c) => c.character.toLowerCase().includes(characterName));
                         const character = findCharacter.length ? character[0] : null;
+                        if (!character) {
+                            return session.send("Sorry, I didn't find that character in the movie.");
+                        }
                         session.send("I think the person you're looking for is " + character.name);
+                    } else {
+                        session.send("Sorry, something went wrong when I was trying to look up the character in the movie.");
                     }
                 });
+            } else {
+                session.send("Sorry, something went wrong when I was looking up the movie.")
             }
         });
     })
