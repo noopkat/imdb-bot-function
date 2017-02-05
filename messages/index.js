@@ -9,6 +9,7 @@ const builder = require("botbuilder");
 const botbuilder_azure = require("botbuilder-azure");
 const request = require("request");
 const actorForRole = require('./intents/actorForRole');
+const directorName = require('./intents/directorName');
 
 const useEmulator = (process.env.NODE_ENV == 'development');
 
@@ -33,6 +34,7 @@ const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' +
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('actorForRole', actorForRole)
+    .matches('directorName', directorName)
     .matches('greeting', (session, args) => {session.send('hello i am clappy', session.message.text)})
     .onDefault((session) => {session.send('Sorry, I did not understand \'%s\'.', session.message.text)});
 
