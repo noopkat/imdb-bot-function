@@ -34,38 +34,42 @@ const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' +
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
-/*
-.matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
+    .matches('greeting', (session, args) => {
+        session.send('hello i am clappy', session.message.text);
+    })
+    .matches('actorForRole', (session, args) => {
+        var movieTitle = args.entities.filter(function(entity) {
+            return entity.type === 'movieTitle';
+        })[0].entity;
+        var characterName = args.entities.filter(function(entity) {
+            return entity.type === 'characterName';
+        })[0].entity;
 
-.matches('None', (session, args) => {
-    session.send('Hi! This is the None intent handler. You said: \'%s\'.', session.message.text);
-})
-*/
-.matches('greeting', (session, args) => {
-    session.send('hello i am clappy', session.message.text);
-})
-.matches('actorForRole', (session, args) => {
-    // session.send('Its Michael J Fox', session.message.text);
-    var movieTitle = args.entities.filter(function(entity) {
-        return entity.type === 'movieTitle';
-    })[0];
-    var characterName = args.entities.filter(function(entity) {
-        return entity.type === 'characterName';
-    })[0];
+        var teststring = 'intent: actorForRole, movie title: ' + movieTitle + ', character name: ' + characterName;
+        var movieSearchUrl = movieUrl+'search/movie/?query=' + movieTitle + '&api_key='+ movieKey;
 
-    var teststring = 'intent: actorForRole, movie title: ' + movieTitle.entity + ', character name: ' + characterName.entity;
-    console.log(teststring);
-    session.send(teststring);
-    var movieSearchUrl = movieUrl+'search/movie/?query=' + movieTitle.entity + '&api_key='+ movieKey;
-    request(movieSearchUrl, function (error, response, body) {
+        session.send(teststring);
+
+        request(movieSearchUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-           session.send('got something back' + JSON.stringify(response.results));
+
+            var movieId = JSON.parse(body).results[0].id;
+            var movieCreditsUrl = movieUrl+'movie/' + movieId + '/credits?api_key='+ movieKey;
+
+            request(movieCreditsUrl, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var character = JSON.parse(body).cast.filter(function(c) {
+                        return c.character.toLowerCase().includes(characterName);
+                    })[0];
+                    session.send("I think the person you're looking for is " + character.name);
+                }
+            });
         }
     });
 
 })
 .onDefault((session) => {
-    session.send('what the hell' + session.message);
+    session.send('what the hell');
     session.send('Sorry, I did not understand \'%s\'.', session.message.text);
 });
 
