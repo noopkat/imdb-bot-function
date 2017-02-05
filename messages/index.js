@@ -51,27 +51,26 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
         session.send(teststring);
 
         request(movieSearchUrl, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode == 200) {
 
-            var movieId = JSON.parse(body).results[0].id;
-            var movieCreditsUrl = movieUrl+'movie/' + movieId + '/credits?api_key='+ movieKey;
+                var movieId = JSON.parse(body).results[0].id;
+                var movieCreditsUrl = movieUrl+'movie/' + movieId + '/credits?api_key='+ movieKey;
 
-            request(movieCreditsUrl, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    var character = JSON.parse(body).cast.filter(function(c) {
-                        return c.character.toLowerCase().includes(characterName);
-                    })[0];
-                    session.send("I think the person you're looking for is " + character.name);
-                }
-            });
-        }
+                request(movieCreditsUrl, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        var character = JSON.parse(body).cast.filter(function(c) {
+                            return c.character.toLowerCase().includes(characterName);
+                        })[0];
+                        session.send("I think the person you're looking for is " + character.name);
+                    }
+                });
+            }
+        });
+    })
+    .onDefault((session) => {
+        session.send('what the hell');
+        session.send('Sorry, I did not understand \'%s\'.', session.message.text);
     });
-
-})
-.onDefault((session) => {
-    session.send('what the hell');
-    session.send('Sorry, I did not understand \'%s\'.', session.message.text);
-});
 
 bot.dialog('/', intents);    
 
