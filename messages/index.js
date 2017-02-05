@@ -7,6 +7,7 @@ http://docs.botframework.com/builder/node/guides/understanding-natural-language/
 "use strict";
 var builder = require("botbuilder");
 var botbuilder_azure = require("botbuilder-azure");
+var request = require("request");
 
 var useEmulator = (process.env.NODE_ENV == 'development');
 
@@ -25,6 +26,8 @@ var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'api.projectoxford.ai';
 var movieKey = process.env.movieKey;
 var movieToken = process.env.movieToken;
+var movieUrl = 'https://api.themoviedb.org/3/;
+
 
 const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
 
@@ -53,6 +56,13 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     var teststring = 'intent: actorForRole, movie title: ' + movieTitle.entity + ', character name: ' + characterName.entity;
     console.log(teststring);
     session.send(teststring);
+    var movieSearchUrl = movieUrl+'search/movie/?query=' + movieTitle.entity + '&api_key='+ movieKey;
+    request(movieSearchUrl, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+           session.send('got something back' + JSON.stringify(response.results));
+        }
+    });
+
 })
 .onDefault((session) => {
     session.send('what the hell' + session.message);
