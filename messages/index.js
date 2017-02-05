@@ -26,7 +26,7 @@ var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'api.projectoxford.ai';
 var movieKey = process.env.movieKey;
 var movieToken = process.env.movieToken;
-var movieUrl = 'https://api.themoviedb.org/3/;
+var movieUrl = 'https://api.themoviedb.org/3/';
 
 
 const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
