@@ -48,7 +48,7 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
         return entity.type === 'characterName';
     })[0];
 
-    var teststring = 'intent: actorForRole, movie title: ' + movieTitle + ', character name: ' + characterName;
+    var teststring = 'intent: actorForRole, movie title: ' + movieTitle.entity + ', character name: ' + characterName.entity;
     console.log(teststring);
     session.send(teststring);
 })
