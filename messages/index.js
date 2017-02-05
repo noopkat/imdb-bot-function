@@ -25,9 +25,6 @@ const bot = new builder.UniversalBot(connector);
 const luisAppId = process.env.LuisAppId;
 const luisAPIKey = process.env.LuisAPIKey;
 const luisAPIHostName = process.env.LuisAPIHostName || 'api.projectoxford.ai';
-const movieKey = process.env.movieKey;
-const movieToken = process.env.movieToken;
-const movieUrl = 'https://api.themoviedb.org/3/';
 
 
 const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
@@ -36,14 +33,10 @@ const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' +
 const recognizer = new builder.LuisRecognizer(LuisModelUrl);
 const intents = new builder.IntentDialog({ recognizers: [recognizer] })
     .matches('actorForRole', actorForRole)
-    .matches('greeting', (session, args) => {
-        session.send('hello i am clappy', session.message.text);
-    })
-    .onDefault((session) => {
-        session.send('Sorry, I did not understand \'%s\'.', session.message.text);
-    });
+    .matches('greeting', (session, args) => {session.send('hello i am clappy', session.message.text)})
+    .onDefault((session) => {session.send('Sorry, I did not understand \'%s\'.', session.message.text)});
 
-bot.dialog('/', intents);    
+bot.dialog('/', intents);
 
 if (useEmulator) {
     const restify = require('restify');
