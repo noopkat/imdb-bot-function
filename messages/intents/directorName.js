@@ -3,15 +3,10 @@ var movieApiConfig = require('../movieApiConfig');
 
 module.exports = function (session, args) {
     const movieEntity = args.entities.filter((entity) => entity.type === 'movieTitle');
-    const characterEntity = args.entities.filter((entity) => entity.type === 'characterName');
-
     const movieTitle = movieEntity.length ? movieEntity[0].entity : null;
-    const characterName = characterEntity.length ? characterEntity[0].entity : null;
 
     if (!movieTitle) {
         return session.send('Sorry, I don\'t understand which movie you are asking about.');
-    } else if (!characterName) {
-        return session.send('Sorry, I don\'t understand which movie character you are asking about.');
     }
 
     const teststring = 'intent: directorName, movie title: ' + movieTitle;
