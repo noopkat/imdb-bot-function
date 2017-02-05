@@ -58,10 +58,22 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send(teststring);
     var movieSearchUrl = movieUrl+'search/movie/?query=' + movieTitle.entity + '&api_key='+ movieKey;
     request(movieSearchUrl, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-           session.send('got something back' + JSON.stringify(response.results));
-        }
-    });
+    if (!error && response.statusCode == 200) {
+        // console.log('got something back' + JSON.stringify(JSON.parse(body).results[0]));
+        var movieId = JSON.parse(body).results[0].id;
+        // console.log('id:', movieId);
+        var movieCreditsUrl = movieUrl+'movie/' + movieId + '/credits?api_key='+ movieKey;
+        request(movieCreditsUrl, function (error, response, body) {
+            // console.log(error);
+            if (!error && response.statusCode == 200) {
+                var character = JSON.parse(body).cast.filter(function(c) {
+                    return c.character.toLowerCase().includes(characterName.entity);
+                })[0];
+                session.send("I think the person you're looking for is " + character.name);
+            }
+        });
+    }
+});
 
 })
 .onDefault((session) => {
