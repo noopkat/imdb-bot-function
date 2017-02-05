@@ -23,6 +23,8 @@ var bot = new builder.UniversalBot(connector);
 var luisAppId = process.env.LuisAppId;
 var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'api.projectoxford.ai';
+var movieKey = process.env.movieKey;
+var movieToken = process.env.movieToken;
 
 const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
 
