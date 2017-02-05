@@ -40,8 +40,17 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send('hello i am clappy', session.message.text);
 })
 .matches('actorForRole', (session, args) => {
-    session.send('Its Michael J Fox', session.message.text);
-    session.send(JSON.stringify(args));
+    // session.send('Its Michael J Fox', session.message.text);
+    var movieTitle = args.entities.filter(function(entity) {
+        return entity.type === 'movieTitle';
+    })[0];
+    var characterName = args.entities.filter(function(entity) {
+        return entity.type === 'characterName';
+    })[0];
+
+    var teststring = 'intent: actorForRole, movie title: ' + movieTitle + ', character name: ' + characterName;
+    console.log(teststring);
+    session.send(teststring);
 })
 .onDefault((session) => {
     session.send('what the hell' + session.message);
