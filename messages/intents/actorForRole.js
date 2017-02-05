@@ -1,4 +1,5 @@
 var request = require("request");
+var movieApiConfig = require('../movieApiConfig');
 
 module.exports = function(session, args) {
     const movieEntity = args.entities.filter((entity) => entity.type === 'movieTitle');
@@ -16,7 +17,7 @@ module.exports = function(session, args) {
     const teststring = 'intent: actorForRole, movie title: ' + movieTitle + ', character name: ' + characterName;
     session.send(teststring);
 
-    const movieSearchUrl = movieUrl+'search/movie/?query=' + movieTitle + '&api_key='+ movieKey;
+    const movieSearchUrl = movieApiConfig.movieUrl+'search/movie/?query=' + movieTitle + '&api_key='+ movieApiConfig.movieKey;
 
     request(movieSearchUrl, (error, response, body) => {
         if (!error && response.statusCode == 200) {
@@ -33,12 +34,12 @@ module.exports = function(session, args) {
             // }
 
             const movieId = results[0].id;
-            const movieCreditsUrl = movieUrl+'movie/' + movieId + '/credits?api_key='+ movieKey;
+            const movieCreditsUrl = movieApiConfig.movieUrl+'movie/' + movieId + '/credits?api_key='+ movieApiConfig.movieKey;
 
             request(movieCreditsUrl, (error, response, body) => {
                 if (!error && response.statusCode == 200) {
                     const findCharacter = JSON.parse(body).cast.filter((c) => c.character.toLowerCase().includes(characterName));
-                    const character = findCharacter.length ? character[0] : null;
+                    const character = findCharacter.length ? findCharacter[0] : null;
                     if (!character) {
                         return session.send("Sorry, I didn't find that character in the movie.");
                     }
